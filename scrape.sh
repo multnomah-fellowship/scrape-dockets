@@ -5,17 +5,15 @@ debug() {
   [ -n ${DEBUG:-""} ] && echo $1 || true
 }
 
-tmpdir=$(mktemp -d)
-trap "rm -r $tmpdir" EXIT
-
 echo "Downloading docket..."
-filename="$tmpdir/docket.pdf"
-out_filename="downloaded/$(date +%Y-%m-%d).csv"
+today=$(date +%Y-%m-%d)
+filename="downloaded/docket-$today.pdf"
+out_filename="processed/$today.csv"
 debug "  $filename"
 wget -q -O"$filename" http://www.mcda.us/mcda_online_docket.pdf
 
 echo "Uploading to Tabula..."
-resp=$(curl -s -F "files[]=@$filename;filename=mdca_online_docket_$(date +%Y-%m-%d)" http://127.0.0.1:8080/upload.json)
+resp=$(curl -s -F "files[]=@$filename;filename=mdca_online_docket_$today" http://127.0.0.1:8080/upload.json)
 file_id=$(echo $resp | jq -r ".[].file_id")
 
 echo -n "Getting number of pages..."
@@ -46,3 +44,14 @@ curl -X POST \
   -s \
   -d "_method=delete" \
   "http://127.0.0.1:8080/pdf/$file_id"
+
+echo "Adding to git..."
+git add "$filename" "$out_filename"
+
+if git diff --cached --exit-code; then
+  echo "No changed detected!"
+else
+  echo "Hit enter to commit and push"
+  read confirm
+  git commit -m "Add scraped data for $today"
+fi
