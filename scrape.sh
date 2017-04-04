@@ -36,9 +36,6 @@ curl "http://127.0.0.1:8080/pdf/$file_id/data" \
   -d format=csv \
   -d "new_filename=$filename" >$out_filename
 
-echo "Last two rows:"
-tail -n 2 "$out_filename"
-
 echo "Deleting from Tabula..."
 curl -X POST \
   -s \
