@@ -51,4 +51,5 @@ else
   echo "Hit enter to commit and push"
   read confirm
   git commit -m "Add scraped data for $today"
+  git push origin master
 fi
