@@ -26,7 +26,7 @@ time=$(date +%s)
 letters=(A B C D E F G H I J K L M N O P)
 coords='[{"page":1,"extraction_method":"guess","selection_id":"'${letters[0]}$time'","x1":15.345,"x2":749.925,"y1":105.435,"y2":535.095,"width":734.58,"height":429.65999999999997}'
 for I in $(seq 2 $number_of_pages); do
-  coords=$coords',{"page":'$I',"extraction_method":"guess","selection_id":"'${letters[0]}$time'","x1":18.315,"x2":750.915,"y1":21.285,"y2":542.025,"width":732.6,"height":520.74}'
+  coords=$coords',{"page":'$I',"extraction_method":"guess","selection_id":"'${letters[$I]}$time'","x1":18.315,"x2":750.915,"y1":21.285,"y2":542.025,"width":732.6,"height":520.74}'
 done
 coords=$coords']'
 
